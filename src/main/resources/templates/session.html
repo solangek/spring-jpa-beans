@@ -1,0 +1,43 @@
+sessionMessages<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="container">
+    <h1>Bean examples</h1>
+    <h2>Simple bean named example (member injection)</h2>
+    <p>The bean label is: <span th:text="${mylabel}"></span></p>
+    <h2>Singleton bean</h2>
+    <p>The bean label is: <span th:text="${singletonLabel}"></span></p>
+    <h2>Application bean</h2>
+    <p>The bean label is: <span th:text="${applicationLabel}"></span></p>
+    <h2>Session bean</h2>
+    <p>If you look into your database, you will notice that spring creates automatically 2 tables to store sessions and session data.</p>
+<div>
+    <form th:action="@{/persistMessage}" method="post">
+        <textarea name="msg" cols="40" rows="2"></textarea>
+        <br> <input type="submit" value="Save Message" />
+    </form>
+</div>
+<div>
+    <h2>Messages</h2>
+    <ul th:each="message : ${sessionMessages}">
+        <li th:text="${message}">msg</li>
+    </ul>
+</div>
+<div>
+    <form th:action="@{/destroy}" method="post">
+        <input type="submit" value="Destroy Session" />
+    </form>
+</div>
+    <a href="/">back</a>
+</div>
+</body>
+</html>

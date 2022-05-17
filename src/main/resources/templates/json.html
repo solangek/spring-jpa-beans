@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+    (function () {
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById("getit").addEventListener("click", function () {
+                fetch("/getjson", {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }})
+                    .then(res => res.json())
+            .then(resp => {
+
+                res = "";
+                for (el of resp) {
+                    res = res + "<br/>" + el.userName + " ( " + el.email + " )";
+                };
+                document.getElementById("data").innerHTML = res;
+            })
+            .catch(e => {
+                    document.getElementById("data").innerHTML = "Some error occured!";
+            });
+            });
+        });
+    })();
+
+
+</script>
+</head>
+<body>
+
+
+    <div class="container">
+        <h1>json request to a controller</h1>
+        <p>Click on the button then contents of the DB will appear below:</p>
+        <button id="getit">Get some data</button>
+        <hr>
+        <div id="data"></div>
+
+        <a href="/">back</a>
+    </div>
+
+<body>
+
+</body>
+</html>
