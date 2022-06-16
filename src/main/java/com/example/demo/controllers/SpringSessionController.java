@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.beans.Label;
 import com.example.demo.beans.Messages;
+import jdk.jpackage.internal.ApplicationLayout;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,18 +50,21 @@ public class SpringSessionController {
     }
 
     /* without SPRING injection  it would look like this:
-    @PostMapping("/persistMessage")
-    public String persistMessage(@RequestParam("msg") String msg, HttpServletRequest request) {
-        List<String> messages = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
-        if (messages == null) {
-            messages = new ArrayList<>();
-            request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
-        }
-        messages.add(msg);
-        request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
-        return "redirect:/session";
-    }
     */
+//    @PostMapping("/persistMessage")
+//    public String persistMessage(@RequestParam("msg") String msg, HttpServletRequest request) {
+//        synchronized (SpringSessionController.class) { // global monitor
+//            List<String> messages = (List<String>) request.getSession().getAttribute("MY_SESSION_MESSAGES");
+//            if (messages == null) {
+//                messages = new ArrayList<>();
+//                request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
+//            }
+//            messages.add(msg);
+//        }
+//        request.getSession().setAttribute("MY_SESSION_MESSAGES", messages);
+//        return "redirect:/session";
+//    }
+
 
     @PostMapping("/persistMessage")
     public String persistMessage(@RequestParam("msg") String msg) {

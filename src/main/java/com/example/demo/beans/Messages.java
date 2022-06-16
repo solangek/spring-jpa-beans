@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.annotation.SessionScope;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class Messages implements Serializable {
 
     /* BEAN using ctor - session scope */
     @Bean
-    @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+    @SessionScope
     public Messages sessionBeanExample () {
         Messages m = new Messages();
         m.add("I'm session bean Messages");
