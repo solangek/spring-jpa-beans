@@ -34,6 +34,11 @@
                         <input type="text" th:field="*{email}" class="form-control" id="email" placeholder="Email">
                         <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
                     </div>
+                    <div class="form-group col-md-6">
+                        <label for="email" class="col-form-label">Visits</label>
+                        <input type="text" th:field="*{visits}" class="form-control" id="visits" placeholder="Email">
+                        <span th:if="${#fields.hasErrors('email')}" th:errors="*{visits}" class="text-danger"></span>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mt-5">
