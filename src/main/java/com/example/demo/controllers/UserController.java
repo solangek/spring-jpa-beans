@@ -2,28 +2,18 @@ package com.example.demo.controllers;
 
 import com.example.demo.repo.User;
 import com.example.demo.repo.UserRepository;
-import jakarta.annotation.Resource;
 import jakarta.validation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 
 @Controller
 public class UserController {
 
-    /* set a default value from the application.properties  file */
+    /* example: injecting a default value from the application.properties  file */
     @Value( "${demo.coursename}" )
     private String someProperty;
 
@@ -59,8 +49,7 @@ public class UserController {
 
         // validate the object and get the errors
         if (result.hasErrors()) {
-            // print errors
-            System.out.println("errors: " + result.getAllErrors());
+            // errors will be displayed in the view
             return "add-user";
         }
 
@@ -84,20 +73,30 @@ public class UserController {
         return "index";
     }
 
-    /*
-     REST style controller
+    /** we implemented a POST request for adding a user, as a result
+     * if the user accesses the /adduser URL with a GET request, we must redirect him to the main page
+     * @param user
+     * @param model
+     * @return
+     */
+    @GetMapping("/adduser")
+    public String showAddUserForm(User user, Model model) {
+        // redirect to main page
+        return "redirect:/";
+    }
+
 
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
 
-        User user = getRepo().findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        User user = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 
         // the name "user"  is bound to the VIEW
         model.addAttribute("user", user);
         return "update-user";
     }
-    */
 
+    /* same as above but PostMapping
     @PostMapping("/edit")
     public String editUser(@RequestParam("id") long id, Model model) {
 
@@ -106,7 +105,7 @@ public class UserController {
         // the name "user"  is bound to the VIEW
         model.addAttribute("user", user);
         return "update-user";
-    }
+    }    */
 
     @PostMapping("/update/{id}")
     public String updateUser(@PathVariable("id") long id, @Valid User user, BindingResult result, Model model) {
@@ -120,20 +119,13 @@ public class UserController {
         return "index";
     }
 
-    @GetMapping("/update")
-    public String updateUserGet(@RequestParam("id") long id, @Valid User user, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            user.setId(id);
-            return "update-user";
-        }
-
-        repository.save(user);
-        model.addAttribute("users", repository.findAll());
-        return "index";
+    @GetMapping("/update/{id}")
+    public String updateUserGet() {
+        return "redirect:/";
     }
 
-    @GetMapping("/delete/{id}")
-    public String deleteUser(@PathVariable("id") long id, Model model) {
+    @PostMapping("/delete")
+    public String deleteUser(@RequestParam("id") long id, Model model) {
 
         User user = repository
                 .findById(id)
@@ -143,6 +135,11 @@ public class UserController {
         repository.delete(user);
         model.addAttribute("users", repository.findAll());
         return "index";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUserGet() {
+        return "redirect:/";
     }
 
     /**
@@ -158,6 +155,12 @@ public class UserController {
      * a sample controller return the content of the DB in JSON format
      * @return
      */
+
+    /** handling IllegalArgumentException */
+    @GetMapping("/error")
+    public String error() {
+        return "error";
+    }
 
 
 }

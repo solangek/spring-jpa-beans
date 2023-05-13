@@ -7,11 +7,15 @@ import java.util.List;
 /* default scope of this Bean is "singleton" */
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    /** SOME EXAMPLES:
+     *  defining some queries using the method names
+     *  Spring will implement the method for us based on the method name
+     *  https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods
+     */
     List<User> findByUserName(String userName);
-    /* add here the queries you may need - in addition to CRUD operations
     List<User> findUserByUserName(String userName);
     List<User> findByEmail(String email);
     List<User> findByUserNameAndEmail(String userName, String email);
-    List<User> findFirst10ByOrderByUserNameDesc();
-     */
+    List<User> findFirst10ByOrderByUserNameDesc(); // find first 10 users ordered by userName desc
+
 }

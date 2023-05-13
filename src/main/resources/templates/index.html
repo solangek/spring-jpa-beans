@@ -43,13 +43,13 @@
                         <td th:text="${user.email}"></td>
                         <td th:text="${user.visits}"></td>
                         <td>
-                            <!-- not recommended: using GET controller <a th:href="@{/edit/{id}(id=${user.id})}" class="btn btn-primary"><i class="fas fa-user-edit ml-2"></i></a> -->
-                            <form action="#" th:action="@{/edit}" th:object="${user}" method="post">
-                                <input type="hidden" name="id" th:value="${user.id}">
-                                <input class="btn btn-primary" type="submit" value="EDIT" />
-                            </form>
+                            <a th:href="@{/edit/{id}(id=${user.id})}" class="btn btn-primary">EDIT</a>
                         </td>
-                        <td><a th:href="@{/delete/{id}(id=${user.id})}" class="btn btn-primary"><i class="fas fa-user-times ml-2"></i></a></td>
+                        <td>
+                            <form action="#" th:action="@{/delete}" th:object="${user}" method="post">
+                                <input type="hidden" name="id" th:value="${user.id}">
+                                <input class="btn btn-primary" type="submit" value="DELETE" />
+                        </td>
                     </tr>
                     </tbody>
                 </table>

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Demo1Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <configuration default="false" name="SpringJpaBeans app" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" />
     <module name="spring-jpa-beans" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.demo.Demo1Application" />
