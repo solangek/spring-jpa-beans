@@ -50,6 +50,7 @@ public class UserController {
         // validate the object and get the errors
         if (result.hasErrors()) {
             // errors will be displayed in the view
+            System.out.println("validation errors: " + result.getAllErrors());
             return "add-user";
         }
 
@@ -127,6 +128,8 @@ public class UserController {
     @PostMapping("/delete")
     public String deleteUser(@RequestParam("id") long id, Model model) {
 
+        // we throw an exception if the user is not found
+        // since we don't catch the exception here, it will fall back on an error page (see below)
         User user = repository
                 .findById(id)
                 .orElseThrow(
@@ -138,7 +141,12 @@ public class UserController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteUserGet() {
+    public String deleteUserGet(@PathVariable long id) {
+        return "redirect:/";
+    }
+
+    @GetMapping("/delete")
+    public String deleteUserGetNoParams() {
         return "redirect:/";
     }
 
