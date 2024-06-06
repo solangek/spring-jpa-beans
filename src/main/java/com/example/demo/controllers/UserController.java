@@ -2,13 +2,25 @@ package com.example.demo.controllers;
 
 import com.example.demo.repo.User;
 import com.example.demo.repo.UserRepository;
+import com.example.demo.services.UserService;
 import jakarta.validation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -20,6 +32,9 @@ public class UserController {
     /* inject via its type the User repo bean - a singleton */
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/")
     public String main(User user, Model model) {
@@ -49,7 +64,7 @@ public class UserController {
 
         // validate the object and get the errors
         if (result.hasErrors()) {
-            // errors will be displayed in the view
+            // errors MUST be displayed in the view and not just printed to the console
             System.out.println("validation errors: " + result.getAllErrors());
             return "add-user";
         }
@@ -87,10 +102,18 @@ public class UserController {
     }
 
 
+    /**
+     * USING GET HTTP METHODS FOR UPDATING AND DELETING IS NOT A GOOD PRACTICE
+     * below you will find the same methods but using POST methods
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
 
-        User user = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        User user = repository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Invalid user Id:" + id));
 
         // the name "user"  is bound to the VIEW
         model.addAttribute("user", user);
@@ -140,6 +163,11 @@ public class UserController {
         return "index";
     }
 
+    /**
+     * USING GET HTTP METHODS FOR UPDATING AND DELETING IS NOT A GOOD PRACTICE
+     * @param id
+     * @return
+     */
     @GetMapping("/delete/{id}")
     public String deleteUserGet(@PathVariable long id) {
         return "redirect:/";
@@ -169,7 +197,6 @@ public class UserController {
     public String error() {
         return "error";
     }
-
 
 }
 
