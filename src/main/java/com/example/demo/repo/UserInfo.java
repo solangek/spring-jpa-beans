@@ -1,14 +1,14 @@
 package com.example.demo.repo;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
+import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
 import java.io.Serializable;
 
+/**
+ * This is an entity class that represents the user table in the database
+ */
 @Entity
-public class User implements Serializable {
+public class UserInfo implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,9 +21,15 @@ public class User implements Serializable {
     @Email(message = "Email should be valid")
     private String email;
 
+    @Column(nullable = false)
     @PositiveOrZero(message = "Visits must be positive or zero")
     @NotNull
     private int visits = 0;
+
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public int getVisits() {
         return visits;
@@ -32,9 +38,9 @@ public class User implements Serializable {
         this.visits = visits;
     }
 
-    public User() {}
+    public UserInfo() {}
 
-    public User(String userName, String email) {
+    public UserInfo(String userName, String email) {
         this.userName = userName;
         this.email = email;
     }
@@ -46,14 +52,6 @@ public class User implements Serializable {
         return id;
     }
 
-    public void setUserName(String userName) {
-        // Annotation may not be enough
-        // you can also perform your own validation inside setters
-        // exception should be caught by service/controller
-        if (userName.length() > 32)
-            throw new IllegalArgumentException("Name cannot exceed 32 characters");
-        this.userName = userName;
-    }
     public String getUserName() {
         return userName;
     }

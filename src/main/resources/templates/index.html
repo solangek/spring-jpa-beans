@@ -38,16 +38,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="user : ${users}">
-                        <td th:text="${user.userName}"></td>
-                        <td th:text="${user.email}"></td>
-                        <td th:text="${user.visits}"></td>
+                    <tr th:each="userInfo : ${users}">
+                        <td th:text="${userInfo.userName}"></td>
+                        <td th:text="${userInfo.email}"></td>
+                        <td th:text="${userInfo.visits}"></td>
                         <td>
-                            <a th:href="@{/edit/{id}(id=${user.id})}" class="btn btn-primary">EDIT</a>
+                            <a th:href="@{/edit/{id}(id=${userInfo.id})}" class="btn btn-primary">EDIT</a>
                         </td>
                         <td>
-                            <form action="#" th:action="@{/delete}" th:object="${user}" method="post">
-                                <input type="hidden" name="id" th:value="${user.id}">
+                            <form action="#" th:action="@{/delete}" th:object="${userInfo}" method="post">
+                                <input type="hidden" name="id" th:value="${userInfo.id}">
                                 <input class="btn btn-primary" type="submit" value="DELETE" />
                             </form>
                         </td>
