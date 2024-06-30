@@ -51,6 +51,9 @@
                                 <input class="btn btn-primary" type="submit" value="DELETE" />
                             </form>
                         </td>
+                        <td>
+                            <a th:href="@{/grade/{id}(id=${userInfo.id})}" class="btn btn-primary">Add grade</a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>

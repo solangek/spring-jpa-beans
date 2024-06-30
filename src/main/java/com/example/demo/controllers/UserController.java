@@ -49,7 +49,9 @@ public class UserController {
 
     /**
      * This method is used to show the sign-up form
-     * @param userInfo the user object that is bound to the form
+     * @param userInfo the user object that is bound to the form in thymeleaf
+     *                 we're going to use this object to display errors in the
+     *                 post method, since we're using the same view we must pass it
      * @return the name of the view
      */
     @GetMapping("/signup")
@@ -58,7 +60,8 @@ public class UserController {
     }
 
     /**
-     * because we declared a BindingResult parameter, Spring will pass it to the controller
+     * remember when processing a regular form submit we don't need the @RequestBody annotation,
+     * conversions are done automatically by Spring
      * and we MUST use it to check for validation errors and catch them
      * @param userInfo the user object that is bound to the form
      * @param result the BindingResult object that is used to check for validation errors
@@ -140,7 +143,7 @@ public class UserController {
      * @return the name of the view
      */
     @PostMapping("/edit")
-    public String editUser(@RequestParam("id") long id, Model model) {
+    public String editUser(Long id, Model model) {
 
         UserInfo userInfo = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 

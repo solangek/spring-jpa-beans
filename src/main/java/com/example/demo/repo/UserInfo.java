@@ -3,6 +3,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * This is an entity class that represents the user table in the database
@@ -26,6 +27,13 @@ public class UserInfo implements Serializable {
     @NotNull
     private int visits = 0;
 
+    @OneToMany
+    private List<Grade> grades;
+
+    public UserInfo() {
+
+    }
+
 
     public void setUserName(String userName) {
         this.userName = userName;
@@ -38,11 +46,14 @@ public class UserInfo implements Serializable {
         this.visits = visits;
     }
 
-    public UserInfo() {}
+    public UserInfo(List<Grade> grades) {
+        this.grades = grades;
+    }
 
-    public UserInfo(String userName, String email) {
+    public UserInfo(String userName, String email, List<Grade> grades) {
         this.userName = userName;
         this.email = email;
+        this.grades = grades;
     }
 
     public void setId(long id) {
@@ -61,6 +72,14 @@ public class UserInfo implements Serializable {
     }
     public String getEmail() { return email; }
 
+
+    public List<Grade> getGrades() {
+        return grades;
+    }
+
+    public void setGrades(List<Grade> grades) {
+        this.grades = grades;
+    }
 
     @Override
     public String toString() {
