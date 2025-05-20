@@ -1,7 +1,9 @@
 package com.example.demo.services;
 
 import com.example.demo.repo.UserInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Validator;
 
 /**
  * Service layer is used to implement business logic such as validation
@@ -9,6 +11,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ValidationService {
+
+    /* the Validator interface is used to validate the user object
+     * it is used to validate the user object in the controller
+     * and it is used to validate the user object in the service layer
+     * it is a good practice to use the Validator interface instead of using
+     * the @Valid annotation directly in the controller
+     */
+    @Autowired
+    private Validator validator;
 
     /**
      * When you need more complex validation rules that cannot be implemented using the @Valid annotation

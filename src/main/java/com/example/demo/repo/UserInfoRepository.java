@@ -1,6 +1,7 @@
 package com.example.demo.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface UserInfoRepository extends JpaRepository<UserInfo, Long> {
     List<UserInfo> findByUserNameAndEmail(String userName, String email);
     List<UserInfo> findFirst10ByOrderByUserNameDesc(); // find first 10 users ordered by userName desc
 
+    @Query("SELECT u FROM UserInfo u JOIN FETCH u.grades")
+    List<UserInfo> findAllWithGrades();
 }

@@ -3,41 +3,39 @@ package com.example.demo.controllers;
 import com.example.demo.repo.Grade;
 import com.example.demo.repo.GradeRepository;
 import com.example.demo.repo.UserInfo;
-import com.example.demo.repo.UserInfoRepository;
+import com.example.demo.services.*;
+import com.example.demo.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class GradeController {
 
+    // AGAIN for teaching purpose we use the repository directly
+    // we should use the service layer
     @Autowired
-    private UserInfoRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private GradeRepository gradeRepository;
 
     @GetMapping("/grade/{id}")
     public String gradeUser(Grade grade, @PathVariable long id, Model model) {
-        UserInfo userInfo = userRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Invalid user Id:" + id));
+        UserInfo userInfo = userService.findUserById(id);
         model.addAttribute("userId", userInfo.getId());
         return "grade-user";
     }
 
     // user id is passed in input type hiden form
-    // we retrieve the user id from the form and save the grade
+    // we save the grade
     @PostMapping("/grade")
     public String gradeUser(@Valid Grade grade, Long userId, Model model) {
-        //long userId = 1;
-        UserInfo userInfo = userRepository.findById(userId).orElseThrow(
-                () -> new IllegalArgumentException("Invalid user Id:" + userId));
+
+        UserInfo userInfo = userService.findUserById(userId);
         model.addAttribute("userId", userInfo.getId());
         grade.setUserInfo(userInfo);
         gradeRepository.save(grade);

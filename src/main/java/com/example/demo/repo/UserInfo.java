@@ -1,5 +1,6 @@
 package com.example.demo.repo;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.io.Serializable;
@@ -27,7 +28,11 @@ public class UserInfo implements Serializable {
     @NotNull
     private int visits = 0;
 
-    @OneToMany
+    // we define the relationship between the user and the grades
+    // a user can have many grades, but a grade belongs to one user
+    // if we delete a user, we want to delete all the grades associated with it
+    // this is called orphan removal
+    @OneToMany (mappedBy="userInfo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Grade> grades;
 
     public UserInfo() {
@@ -84,6 +89,18 @@ public class UserInfo implements Serializable {
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", userName=" + userName + ", email=" + email + '}';
+    }
+
+    /**
+     * This method is used to add a grade to the user
+     * @param grade the grade to add
+     */
+    public void setGrade(@Valid Grade grade) {
+        if (grades != null) {
+            grades.add(grade);
+        } else {
+            grades = List.of(grade);
+        }
     }
 }
 

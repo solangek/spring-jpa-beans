@@ -2,6 +2,7 @@ package com.example.demo.controllers;
 
 import com.example.demo.repo.UserInfo;
 import com.example.demo.repo.UserInfoRepository;
+import com.example.demo.services.UserService;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/api")
 public class UserRestController {
     @Autowired
-    private UserInfoRepository repository;
+    private UserService userService;
 
     /** http://localhost:8080/api/adduser
      * In this rest endpoint we handle validation errors with a custom exception handler
@@ -29,14 +30,13 @@ public class UserRestController {
      */
     @PostMapping("/adduser")
     public UserInfo addUserRest(@Valid @RequestBody UserInfo userInfo) {
-        repository.save(userInfo);
+        userService.saveUser(userInfo);
         return userInfo;
     }
 
     @GetMapping("/users")
     public Iterable<UserInfo> getUsers() {
-
-        return repository.findAll();
+        return userService.getAllUsers();
     }
 
     // then comment out the exception handler below and rerun the request,

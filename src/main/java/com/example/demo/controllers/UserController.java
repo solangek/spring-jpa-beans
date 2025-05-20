@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -25,9 +26,12 @@ public class UserController {
     @Value( "${demo.coursename}" )
     private String someProperty;
 
-    // more injections of beans
-    @Autowired
-    private UserInfoRepository repository;
+    // more injections of beans - it is recommended to use a service layer
+    // to implement business logic such as validation of complex rules
+    // and not inject the repository directly into the controller as:
+    // @Autowired
+    // private UserInfoRepository repository;
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -43,7 +47,9 @@ public class UserController {
         model.addAttribute("course", someProperty);
 
         // the name "users"  is bound to the VIEW
-        model.addAttribute("users", repository.findAll());
+        // model.addAttribute("users", repository.findAll());
+        // instead of using the repository directly in the controller, we use the service layer
+        model.addAttribute("users", userService.getAllUsers());
         return "index";
     }
 
@@ -71,19 +77,20 @@ public class UserController {
     @PostMapping("/adduser")
     public String addUser(@Valid UserInfo userInfo, BindingResult result, Model model) {
 
-        // optionally use a ValidationService class that validates more complex rules
+        // another way to validate more complex rules
+        // define a ValidationService
         String err = validationService.validateUser(userInfo);
         if (!err.isEmpty()) {
             ObjectError error = new ObjectError("globalError", err);
             result.addError(error);
         }
-
-        // in any case, validate the object and get the errors
+        // validate the object and get the errors
         if (result.hasErrors()) {
             // errors MUST be displayed in the view and not just printed to the console
             System.out.println("validation errors: " + result.getAllErrors());
             return "add-user";
         }
+
 
         // you can also validate the object manually:
 
@@ -98,10 +105,14 @@ public class UserController {
         // to the database even if it's not valid, then you'll get an exception
         // when you try to save it to the database
 
-        repository.save(userInfo);
+        // repository.save(userInfo);
+        // we can use the service layer to save the user
+        userService.saveUser(userInfo);
 
         // pass the list of users to the view
-        model.addAttribute("users", repository.findAll());
+        // model.addAttribute("users", repository.findAll());
+        // instead of using the repository directly in the controller, we use the service layer
+        model.addAttribute("users", userService.getAllUsers());
         return "index";
     }
 
@@ -129,8 +140,10 @@ public class UserController {
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") long id, Model model) {
 
-        UserInfo userInfo = repository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Invalid user Id:" + id));
+//        UserInfo userInfo = repository.findById(id).orElseThrow(
+//                () -> new IllegalArgumentException("Invalid user Id:" + id));
+        // instead of using the repository directly in the controller, we use the service layer
+        UserInfo userInfo = userService.findUserById(id);
 
         // the name "user"  is bound to the VIEW
         model.addAttribute("userInfo", userInfo);
@@ -145,7 +158,9 @@ public class UserController {
     @PostMapping("/edit")
     public String editUser(Long id, Model model) {
 
-        UserInfo userInfo = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        //UserInfo userInfo = repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        // instead of using the repository directly in the controller, we use the service layer
+        UserInfo userInfo = userService.findUserById(id);
 
         // the name "user"  is bound to the VIEW
         model.addAttribute("userInfo", userInfo);
@@ -167,9 +182,11 @@ public class UserController {
             System.out.println("validation errors: " + result.getAllErrors());
             return "update-user";
         }
-
-        repository.save(userInfo);
-        model.addAttribute("users", repository.findAll());
+        // the id is automatically set in the userInfo object
+        // since we use the @PathVariable annotation to get the id from the URL
+        // userInfo.setId(id);
+        userService.updateUser(userInfo);
+        model.addAttribute("users", userService.getAllUsers());
         return "index";
     }
 
@@ -191,15 +208,8 @@ public class UserController {
     @PostMapping("/delete")
     public String deleteUser(@RequestParam("id") long id, Model model) {
 
-        // we throw an exception if the user is not found
-        // since we don't catch the exception here, it will fall back on an error page (see below)
-        UserInfo userInfo = repository
-                .findById(id)
-                .orElseThrow(
-                    () -> new IllegalArgumentException("Invalid user Id:" + id)
-                );
-        repository.delete(userInfo);
-        model.addAttribute("users", repository.findAll());
+        userService.deleteUserById(id);
+        model.addAttribute("users", userService.getAllUsers());
         return "index";
     }
 
@@ -244,6 +254,7 @@ public class UserController {
     public String error() {
         return "error";
     }
+
 
 }
 
